@@ -1,0 +1,135 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'IoT Appliance registration'
+  description: Register your IoT appliances
+
+paths:
+  /appliances:
+    get:
+      summary: List appliances
+      responses:
+        '200':
+          description: A page of Appliance objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplianceCollection'
+    post:
+      summary: Create an appliance
+      responses:
+        '200':
+          description: The appliance was created
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /appliances/{applianceId}:
+    parameters:
+      - name: applianceId
+        description: The unique identifier of the appliance
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ApplianceId'
+    get:
+      summary: Read a appliance
+      responses:
+        '200':
+          description: The appliance corresponding to the provided `applianceId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appliance'
+        404:
+          description: No applianceId found for the provided `applianceId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update an appliance
+      responses:
+        '200':
+          description: The appliance was updated
+        404:
+          description: No appliance found for the provided 'applianceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete an appliance
+      responses:
+        '200':
+          description: The appliance was deleted
+        404:
+          description: No appliance found fyor the provided 'applianceId'
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    ApplianceId:
+      description: The unique identifier of a IoT appliance
+      type: string
+    Appliance:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/ApplianceId'
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+            - Set top box
+            - Lightbulb
+            - Smoke detector
+        createdAt:
+          type: string
+    ApplianceCollection:
+      description: A collection of Appliances
+      type: array
+      items:
+          $ref: '#/components/schemas/Appliance'
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          description: A human readable error message
+          type: string
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+security:
+  - ApiKey: []

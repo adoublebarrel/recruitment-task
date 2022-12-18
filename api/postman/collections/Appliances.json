@@ -1,0 +1,74 @@
+{
+	"info": {
+		"_postman_id": "03a5fc57-0d1c-4466-9091-261d157a9d05",
+		"name": "Appliances",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "24976484-03a5fc57-0d1c-4466-9091-261d157a9d05"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ff986431-6531-404a-8826-dc222061e6ea",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"pm.test(\"Returns 100 results at a time\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length).to.eql(100);",
+							"});",
+							"",
+							"var schema = {",
+							"    type: \"array\",",
+							"    \"items\": {",
+							"        \"type\": \"object\",",
+							"        \"properties\": {",
+							"            \"id\": { \"type\": \"number\"},",
+							"            \"name\": { \"type\": \"string\"},",
+							"            \"type\": { \"enum\": [\"Set top box\", \"Lightbulb\", \"Smoke detector\"]},",
+							"            \"createdAt\": { \"type\": \"string\" }   ",
+							"        }",
+							"    }",
+							"};",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test('Schema is valid', function () {",
+							"    console.log(jsonData);",
+							"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "7b926fe9-7295-453e-83e3-64dc20d9f694",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Server}}/appliances",
+					"host": [
+						"{{Server}}"
+					],
+					"path": [
+						"appliances"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
