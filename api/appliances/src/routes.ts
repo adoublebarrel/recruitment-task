@@ -4,7 +4,7 @@ import applianceDB from './db'
 
 const router = express.Router()
 
-router.get('/list', (req: Request, res: Response) => {
+router.get('/', (req: Request, res: Response) => {
   res.json(applianceDB)
 })
 
