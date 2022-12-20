@@ -2,7 +2,63 @@
 
 This codebase contains a skeletal, microservices-like app for registering IoT appliances (e.g set top boxes, smart bulbs) with a database. There is a "front end" (a blank Create React App in the `client` directory), and a "back end" (a rudimentary Node app in the `api` directory).
 
-## Scope
+## Submission made by Alex Bransby-Sharples
+
+This codebase has been updated with my work on completing as many of the tasks as I was able to in a reasonable time.
+
+Time taken: Over two hours, probably more like 3.
+
+### Packages added
+
+- [Newman](https://www.npmjs.com/package/newman) a command line runner for Postman, for API testing
+- [Jest](https://www.npmjs.com/package/jest) popular JS testing tool, used for some unit testing
+- [Cypress](https://www.cypress.io/) a browser testing tool, not actually used due to time constraints
+- [CUID](https://www.npmjs.com/package/cuid/v/1.1.4) Collission-resistant ids optimized for horizontal scaling and sequential lookup performance - in this case used so that clients can generate a valid id, reducing API chatter and simplifying testing.
+
+### Running the API tests
+
+Note: The tests assume that Node app is running on http://localhost:3000.
+
+1. Checkout this branch, then run the following in the `api/appliances` folders:
+
+```bash
+npm i
+npm run start
+```
+
+2. Run the following in the `api` folder and perform a test run:
+
+```bash
+npm i
+npm run test
+```
+
+### Running the Node unit tests
+
+1. Checkout this branch, then run the following in the `api/appliances` folders:
+
+```bash
+npm i
+npm run test
+```
+
+### Notes
+
+Overall it was good becoming reaquainted with Node and Express. Ofcourse I would have liked to have a) kept within the time limit and b) completed it all.
+
+Main factors in time overrun:
+
+- Context swictching, I kept having to put this down for home life/work deadlines
+- Having to do a fair bit of reading around and trial/error with aspects of Express.
+- Introducing API tests - not strictly in the brief but end to end tests are at least as important as unit tests
+
+I wouldn't want to ship this but I hope it gives enough of an idea of the general direction of travel.
+
+## Original instructions
+
+This codebase contains a skeletal, microservices-like app for registering IoT appliances (e.g set top boxes, smart bulbs) with a database. There is a "front end" (a blank Create React App in the `client` directory), and a "back end" (a rudimentary Node app in the `api` directory).
+
+### Scope
 
 - You should attempt to complete as much as you can in **no more than 2 hours**.
 - 100% completion is **not** a requirement (but how much you complete and to what quality, will be evaluated).
@@ -11,7 +67,7 @@ This codebase contains a skeletal, microservices-like app for registering IoT ap
 - You can install any packages you need
 - All of the code is fair-game for any changes you deem necessary.
 
-## Installation
+### Installation
 
 Check out this repo, then run the following in the `client` and `api/appliances` folders:
 
@@ -20,11 +76,11 @@ npm i
 npm run start
 ```
 
-## Delivery of your solutions
+### Delivery of your solutions
 
 Please submit a PR to this repo which includes your solutions.
 
-## Tasks
+### Tasks
 
 1. Create suitable REST routes in the `appliances` service, to
 
