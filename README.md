@@ -4,7 +4,7 @@ This codebase contains a skeletal, microservices-like app for registering IoT ap
 
 ## Submission made by Alex Bransby-Sharples
 
-This codebase has been updated with my work on completing as many of the tasks as I was able to in a reasonable time.
+This codebase has been updated with my work on completing the first 5 tasks defined at the bottom of this Readme.
 
 Time taken: Over two hours, probably more like 3.
 
