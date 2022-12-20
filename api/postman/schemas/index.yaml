@@ -34,7 +34,7 @@ paths:
         in: path
         required: true
         schema:
-          $ref: '#/components/schemas/ApplianceId'
+          $ref: '#/components/schemas/Id'
     get:
       summary: Read a appliance
       responses:
@@ -88,10 +88,83 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /appliances/{applianceId}/commands:
+    parameters:
+      - name: applianceId
+        description: The unique identifier of the appliance
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Id'
+
+    get:
+      summary: List commands
+      responses:
+        '200':
+          description: A page of command objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Command'
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a command
+      responses:
+        '202':
+          description: The commond was accepted for processing
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /appliances/{applianceId}/commands/{commandId}:
+    parameters:
+    - name: applianceId
+      description: The unique identifier of the appliance
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+    - name: commandId
+      description: The unique identifier of the command
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+
+    get:
+      summary: Read a command
+      responses:
+        '200':
+          description: The command corresponding to the provided `commandId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Command'
+        404:
+          description: No Command found for the provided `commandId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
 components:
   schemas:
-    ApplianceId:
-      description: The unique identifier of a IoT appliance
+    Id:
+      description: The unique identifier for all system resources
       type: string
     Appliance:
       type: object
@@ -99,10 +172,11 @@ components:
         - id
         - name
         - type
+        - status
         - createdAt
       properties:
         id:
-          $ref: '#/components/schemas/ApplianceId'
+          $ref: '#/components/schemas/Id'
         name:
           type: string
         type:
@@ -113,11 +187,46 @@ components:
             - Smoke detector
         createdAt:
           type: string
+          format: date-time
     ApplianceCollection:
       description: A collection of Appliances
       type: array
       items:
           $ref: '#/components/schemas/Appliance'
+    Command:
+      type: object
+      required:
+        - id
+        - type
+        - status
+        - createdAt
+        - log
+      properties:
+        id:
+          $ref: '#components/schemas/Id'
+        type:
+          type: string
+          enum:
+            - Reboot
+        status:
+          type: string
+          enum:
+            - Pending
+            - Exeucting
+            - Failed
+            - Succeeded
+        createdAt:
+          type: string
+          format: date-time
+        log:
+          type: string
+          format: uri
+
+    CommandCollection:
+      description: A collection of commands issued to an appliance
+      type: array
+      items:
+        $ref: '#/components/schemas/Command'
     Error:
       type: object
       required:

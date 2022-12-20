@@ -1,18 +1,18 @@
 {
 	"info": {
-		"_postman_id": "03a5fc57-0d1c-4466-9091-261d157a9d05",
+		"_postman_id": "aba15d5b-803c-45cc-9452-2f97c8c98848",
 		"name": "Appliances",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_uid": "24976484-03a5fc57-0d1c-4466-9091-261d157a9d05"
+		"_uid": "24976484-aba15d5b-803c-45cc-9452-2f97c8c98848"
 	},
 	"item": [
 		{
-			"name": "New Request",
+			"name": "List",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "ff986431-6531-404a-8826-dc222061e6ea",
+						"id": "a0923b4e-ab1e-47e8-8fc1-ff21caaef1d6",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -22,17 +22,11 @@
 							"    pm.expect(pm.response.responseTime).to.be.below(200);",
 							"});",
 							"",
-							"pm.test(\"Returns 100 results at a time\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.length).to.eql(100);",
-							"});",
-							"",
 							"var schema = {",
 							"    type: \"array\",",
 							"    \"items\": {",
 							"        \"type\": \"object\",",
 							"        \"properties\": {",
-							"            \"id\": { \"type\": \"number\"},",
 							"            \"name\": { \"type\": \"string\"},",
 							"            \"type\": { \"enum\": [\"Set top box\", \"Lightbulb\", \"Smoke detector\"]},",
 							"            \"createdAt\": { \"type\": \"string\" }   ",
@@ -51,11 +45,14 @@
 					}
 				}
 			],
-			"id": "7b926fe9-7295-453e-83e3-64dc20d9f694",
+			"id": "c7803ca2-721a-4fac-aa42-406a126bccc4",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -69,6 +66,578 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Missing body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bfa4ca41-a9fd-4a5d-8b53-1bdd8738a3b5",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "7473f6f4-781e-4366-9016-b5f073140e3e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{Server}}/appliances",
+					"host": [
+						"{{Server}}"
+					],
+					"path": [
+						"appliances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Missing name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1e00e186-c529-4e89-bfe5-eda14ad43121",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "4d622c5d-3de8-4696-afd2-dbc7127c57f5",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"Set top box\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Server}}/appliances",
+					"host": [
+						"{{Server}}"
+					],
+					"path": [
+						"appliances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid application type",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bc01845e-5566-4730-b319-b6a8c44cc337",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "5e0c5c3b-256f-4520-ab91-8969e06c009a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Test appliance alpha\",\n    \"type\": \"This is not a valid value for type\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Server}}/appliances",
+					"host": [
+						"{{Server}}"
+					],
+					"path": [
+						"appliances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid name (basic XSS attack)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "20c8216c-b2e8-4ffe-8286-c24bfe21d6dd",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "ce924fdb-4581-4993-9bd7-deec349c32ee",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"<script>alert('xss')</script>\",\n    \"type\": \"Set top box\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Server}}/appliances",
+					"host": [
+						"{{Server}}"
+					],
+					"path": [
+						"appliances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Well formed post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bba5674d-8785-4525-b4d0-87546018bcec",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.equal(200);",
+							"});",
+							"",
+							"const schema = {",
+							"    \"type\": \"object\",",
+							"    \"required\": [\"id\", \"name\", \"type\", \"createdAt\"],",
+							"    \"additionalProperties\": false,",
+							"    \"properties\": {",
+							"        \"id\": { \"type\": \"string\"},",
+							"        \"name\": { \"type\": \"string\"},",
+							"        \"type\": { \"enum\": [\"Set top box\", \"Lightbulb\", \"Smoke detector\"]},",
+							"        \"createdAt\": { \"type\": \"string\", \"format\": \"date-time\" }",
+							"    }   ",
+							"};",
+							"",
+							"",
+							"const jsonData = pm.response.json();",
+							"",
+							"pm.test('Response conforms to schema', function () {",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"});",
+							"",
+							"pm.test('id matches input', function() {",
+							"    pm.expect(jsonData.id).to.be.equal('clbumphlj002s09mq5w0k7uxa');",
+							"});",
+							"",
+							"pm.test('name matches input', function() {",
+							"    pm.expect(jsonData.name).to.be.equal('Test appliance alpha');",
+							"});",
+							"",
+							"pm.test('type matches input', function() {",
+							"    pm.expect(jsonData.type).to.be.equal('Set top box');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7f7048a5-8cf5-4489-b958-de1337668b2d",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "400d00a4-dc2a-4001-bba4-deb2a31e9a0b",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"clbumphlj002s09mq5w0k7uxa\",\n    \"name\": \"Test appliance alpha\",\n    \"type\": \"Set top box\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Server}}/appliances",
+					"host": [
+						"{{Server}}"
+					],
+					"path": [
+						"appliances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Duplicate well formed post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a41fd5d8-42b9-43c5-8220-5eb3b9890c32",
+						"exec": [
+							"pm.test(\"Returns 422 Unprocessable Entity\", function () {",
+							"    pm.expect(pm.response.code).to.be.equal(422);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "f827e2cb-c842-405c-b587-661b00a46194",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "c3ad98e8-7624-43da-a649-d630ad032025",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"clbumphlj002s09mq5w0k7uxa\",\n    \"name\": \"Test appliance alpha\",\n    \"type\": \"Set top box\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Server}}/appliances",
+					"host": [
+						"{{Server}}"
+					],
+					"path": [
+						"appliances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get an existing appliance",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "32df9866-cd9b-4e05-ba77-f15e86691238",
+						"exec": [
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f86cf1f8-2858-4608-abb6-a4f6a2b50440",
+						"exec": [
+							"const ID = pm.collectionVariables.get('id');",
+							"const NAME = pm.collectionVariables.get('name');",
+							"const TYPE = pm.collectionVariables.get('type');",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const schema = {",
+							"    \"type\": \"object\",",
+							"    \"required\": [\"id\", \"name\", \"type\", \"createdAt\"],",
+							"    \"additionalProperties\": false,",
+							"    \"properties\": {",
+							"        \"id\": { \"type\": \"string\"},",
+							"        \"name\": { \"type\": \"string\"},",
+							"        \"type\": { \"enum\": [\"Set top box\", \"Lightbulb\", \"Smoke detector\"]},",
+							"        \"createdAt\": { \"type\": \"string\", \"format\": \"date-time\" }",
+							"    }   ",
+							"};",
+							"",
+							"",
+							"const jsonData = pm.response.json();",
+							"",
+							"pm.test('Response conforms to schema', function () {",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"});",
+							"",
+							"pm.test('id matches input', function() {",
+							"    pm.expect(jsonData.id).to.be.equal(ID);",
+							"});",
+							"",
+							"pm.test('name as expected', function() {",
+							"    pm.expect(jsonData.name).to.be.equal(NAME);",
+							"});",
+							"",
+							"pm.test('type as expected', function() {",
+							"    pm.expect(jsonData.type).to.be.equal(TYPE);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "f2ec171c-174c-48d1-803e-5a0ee05a7d07",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{Server}}/appliances/{{id}}",
+					"host": [
+						"{{Server}}"
+					],
+					"path": [
+						"appliances",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update appliance name and type",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bbdfccb5-3005-4670-b002-dbbd12fcf403",
+						"exec": [
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "be3c56d6-ae23-4b93-a96b-8967d0fbf5ee",
+						"exec": [
+							"const ID = pm.collectionVariables.get('id');",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const schema = {",
+							"    \"type\": \"object\",",
+							"    \"required\": [\"id\", \"name\", \"type\", \"createdAt\"],",
+							"    \"additionalProperties\": false,",
+							"    \"properties\": {",
+							"        \"id\": { \"type\": \"string\"},",
+							"        \"name\": { \"type\": \"string\"},",
+							"        \"type\": { \"enum\": [\"Set top box\", \"Lightbulb\", \"Smoke detector\"]},",
+							"        \"createdAt\": { \"type\": \"string\", \"format\": \"date-time\" }",
+							"    }   ",
+							"};",
+							"",
+							"",
+							"const jsonData = pm.response.json();",
+							"",
+							"pm.test('Response conforms to schema', function () {",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"});",
+							"",
+							"pm.test('Response conforms to schema', function () {",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"});",
+							"",
+							"pm.test('id not changed', function() {",
+							"    pm.expect(jsonData.id).to.be.equal(ID);",
+							"});",
+							"",
+							"pm.test('name as expected', function() {",
+							"    pm.expect(jsonData.name).to.be.equal(\"Test appliance beta\");",
+							"});",
+							"",
+							"pm.test('type as expected', function() {",
+							"    pm.expect(jsonData.type).to.be.equal(\"Smoke detector\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "707ccc42-bcbd-4f9f-91ba-e3df6cfec970",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Test appliance beta\",\n    \"type\": \"Smoke detector\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Server}}/appliances/{{id}}",
+					"host": [
+						"{{Server}}"
+					],
+					"path": [
+						"appliances",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "904c93e1-8af1-4122-93b7-52a5228f6ec9",
+						"exec": [
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "074d1fe3-f246-4885-8a02-6ebd57d309c8",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "151cf0cf-cb3d-4032-8bc3-f674e707c42c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{Server}}/appliances/{{id}}",
+					"host": [
+						"{{Server}}"
+					],
+					"path": [
+						"appliances",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "255eed9b-5a99-40f1-a4fe-0b69fb55d33e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "aa4efa22-889d-42b7-a932-ed754050c98b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "96a3cef1-3ceb-44ea-898d-229940596e4d",
+			"key": "id",
+			"value": "clbumphlj002s09mq5w0k7uxa"
+		},
+		{
+			"id": "7cd061d0-f6bd-453f-bfe3-dc1fd88c9463",
+			"key": "name",
+			"value": "Test appliance alpha"
+		},
+		{
+			"id": "bac606d6-9d4f-4b51-a727-28cc6d95199e",
+			"key": "type",
+			"value": "Set top box"
 		}
 	]
 }
