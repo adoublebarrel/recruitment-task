@@ -20,7 +20,7 @@ router.post('/', (req: Request, res: Response) => {
     return;
   }
 
-  res.status(201)
+  res.status(200)
     .json(addAppliance(req.body));
 });
 
@@ -49,7 +49,8 @@ router.get('/:id', (req: Request, res: Response) => {
     if (isValidApplianceId(req.params.id)) {
       const appliance = getAppliance(req.params.id);
 
-      appliance ? res.status(200).json(appliance) : res.status(404);
+      appliance ? res.status(200).json(appliance) : res.status(404).send();
+      return;
     }
 
     res.status(400).send();
